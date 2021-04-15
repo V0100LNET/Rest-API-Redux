@@ -1,8 +1,31 @@
+import React from 'react';
 import './App.css';
+import Header from './components/Header';
+import Productos from './components/Productos';
 
-function App() {
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import NuevoProducto from './components/NuevoProducto';
+import EditarProducto from './components/EditarProducto';
+
+//Redux
+import { Provider } from 'react-redux';
+import store from './store';
+
+function App(){
   return (
-    <h1>Desde App.js</h1>
+    <Router>
+      <Provider store={store}>
+        <Header/>
+
+        <div className="container mt-5">
+          <Switch>
+              <Route exact path="/" component={Productos}/>
+              <Route exact path="/productos/nuevo" component={NuevoProducto}/>
+              <Route exact path="/productos/editar/:id" component={EditarProducto}/>
+          </Switch>
+        </div>
+      </Provider>
+    </Router>
   );
 }
 
