@@ -4,7 +4,14 @@ import {
     AGREGAR_PRODUCTO_ERROR,
     COMENZAR_DESCARGA_PRODUCTOS,
     DESCARGAR_PRODUCTOS_EXITO,
-    DESCARGA_PRODUCTOS_ERROR
+    DESCARGA_PRODUCTOS_ERROR,
+    OBTENER_PRODUCTO_ELIMINAR,
+    PRODUCTO_ELIMINADO_EXITO,
+    PRODUCTO_ELIMINADO_ERROR,
+    OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITADO_EXITO,
+    PRODUCTO_EDITADO_ERROR,
+    COMENZAR_EDICION_PRODUCTO
 } from '../types'
 
 import clienteAxios from '../config/axios';
@@ -85,4 +92,72 @@ const descargarProductosExitosa = productos => ({
 const descargarProductosError = () => ({
     type: DESCARGA_PRODUCTOS_ERROR,
     payload: true
+})
+
+// Selecciona y eleminar el producto
+export function borrarProductoAction(id){
+    return async (dispatch) => {
+        dispatch(abtenerProductoEliminar(id));
+
+        try {
+            const resultado = await clienteAxios.delete(`/productos/${id}`);
+            dispatch(eliminarProductoExito());
+
+            // Si se elimina, mostrar alerta
+            Swal.fire(
+                'Producto Eliminado',
+                'El Producto Se Ha Eliminado Correctamente',
+                'success'
+            )
+        } catch (error) {
+            console.log(error);
+            dispatch(eliminarProductoError());
+        }
+    }
+}
+
+const abtenerProductoEliminar = id => ({
+    type: OBTENER_PRODUCTO_ELIMINAR,
+    payload: id
+})
+
+const eliminarProductoExito = () => ({
+    type: PRODUCTO_ELIMINADO_EXITO
+})
+
+const eliminarProductoError = () => ({
+    type: PRODUCTO_ELIMINADO_ERROR,
+    payload: true
+})
+
+// Colocar producto en edicion
+export function obtenerProductoEditar(producto){
+    return (dispatch) => {
+        dispatch(obtenerProductoAction(producto));
+    }
+}
+
+const obtenerProductoAction = producto => ({
+    type: OBTENER_PRODUCTO_EDITAR,
+    payload: producto
+})
+
+// Edita uin registro en la api y state
+export function editarProductoAction(producto){
+    return async (dispatch) => {
+        dispatch(editarProducto(producto));
+
+        try{
+            const resultado = await clienteAxios.put(`/productos/${producto.id}`, producto);
+            console.log(resultado);
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+}
+
+const editarProducto = producto => ({
+    type: COMENZAR_EDICION_PRODUCTO,
+    payload: producto
 })
