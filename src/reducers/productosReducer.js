@@ -9,6 +9,7 @@ import {
     PRODUCTO_ELIMINADO_EXITO,
     PRODUCTO_ELIMINADO_ERROR,
     OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITADO_EXITO,
 } from '../types'
 
 //cada reducer tien su propio state
@@ -20,6 +21,7 @@ const initialState = {
     productoeditar: null
 }
 
+//  eslint-disable-next-line
 export default function(state = initialState, action){
     switch(action.type){
         case COMENZAR_DESCARGA_PRODUCTOS:
@@ -73,7 +75,14 @@ export default function(state = initialState, action){
                 productoeditar: action.payload 
             }
 
-
+        case PRODUCTO_EDITADO_EXITO: 
+            return{
+                ...state,
+                productoeditar: null,
+                productos: state.productos.map(producto =>
+                    producto.id === action.payload.id ? producto = action.payload : producto
+                )
+            }
 
 
         default:

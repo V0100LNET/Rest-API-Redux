@@ -10,7 +10,7 @@ import {
     PRODUCTO_ELIMINADO_ERROR,
     OBTENER_PRODUCTO_EDITAR,
     PRODUCTO_EDITADO_EXITO,
-    PRODUCTO_EDITADO_ERROR,
+    // PRODUCTO_EDITADO_ERROR,
     COMENZAR_EDICION_PRODUCTO
 } from '../types'
 
@@ -101,7 +101,7 @@ export function borrarProductoAction(id){
 
         try {
             const resultado = await clienteAxios.delete(`/productos/${id}`);
-            dispatch(eliminarProductoExito());
+            dispatch(eliminarProductoExito(resultado));
 
             // Si se elimina, mostrar alerta
             Swal.fire(
@@ -145,19 +145,22 @@ const obtenerProductoAction = producto => ({
 // Edita uin registro en la api y state
 export function editarProductoAction(producto){
     return async (dispatch) => {
-        dispatch(editarProducto(producto));
+        dispatch(editarProducto());
 
         try{
             const resultado = await clienteAxios.put(`/productos/${producto.id}`, producto);
-            console.log(resultado);
+            dispatch(editarProductoExito(resultado));
         } catch (error) {
-            console.log(error);
-            
+            console.log(error);  
         }
     }
 }
 
-const editarProducto = producto => ({
+const editarProducto = () => ({
     type: COMENZAR_EDICION_PRODUCTO,
+})
+
+const editarProductoExito = producto => ({
+    type: PRODUCTO_EDITADO_EXITO,
     payload: producto
 })

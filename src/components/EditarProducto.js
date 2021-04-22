@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import { editarProductoAction } from '../actions/productoActions';
 
 //useSelector para acceder al state global
 //useDispatcht es para ejectar las acciones
 const EditarProducto = () => {
+    const dispatch = useDispatch();
+    const history = useHistory();
+
     //nuevo estate del prodcuto
     const [producto, guardarProducto] = useState({
         nombre: '',
@@ -14,7 +18,7 @@ const EditarProducto = () => {
     // Producto a editar
     const productoeditar = useSelector(state => state.productos.productoeditar);
     
-    const {nombre, precio, id} = producto;
+    const {nombre, precio} = producto;
 
     //llenar el state automaticamente
     useEffect(() => {
@@ -32,7 +36,8 @@ const EditarProducto = () => {
     const submitEditarProducto = e => {
         e.preventDefault();
 
-        editarProductoAction();
+        dispatch(editarProductoAction(producto));
+        history.push('/');
     }
 
     return(

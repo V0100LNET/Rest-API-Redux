@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //Actions de Redux
 import { crearNuevoProductoAction } from '../actions/productoActions';
+import { mostrarAlerta, ocultarAlertaAction } from '../actions/alertaActions';
 
 const NuevoProducto = ({history}) => {
     // state del componente
@@ -14,8 +15,9 @@ const NuevoProducto = ({history}) => {
     const dispatch = useDispatch();
 
     //acceder al state del store
-    const cargando = useSelector(state => state.productos.loading);
+    // const cargando = useSelector(state => state.productos.loading);
     const error = useSelector(state => state.productos.error);
+    const alerta = useSelector(state => state.alerta.alerta);
 
     // manda a llamar el action del productoAction
     const agregarProducto = (producto) => dispatch(crearNuevoProductoAction(producto));
@@ -26,10 +28,17 @@ const NuevoProducto = ({history}) => {
 
         // validar formulario
         if(nombre.trim === '' || precio <= 0){
+            const alerta = {
+                msg: 'Ambos campos son obligatorios',
+                class: 'alert alert-danger text-center text-uppercase p-3'
+            }
+            
+            dispatch(mostrarAlerta(alerta));
             return;    
         }
-
+        
         // si hay errores
+        dispatch(ocultarAlertaAction());
 
         // crear en el nuevo producto
         agregarProducto({
@@ -49,7 +58,7 @@ const NuevoProducto = ({history}) => {
                         <h2 className="text-center mb-4 font-weight-bold">
                             Agregar Nuevo Producto
                         </h2>
-
+                        {alerta ? <p className={alerta.class}>{alerta.msg}</p> : null}  
                         <form
                             onSubmit={submitNuevoProducto}
                         >
